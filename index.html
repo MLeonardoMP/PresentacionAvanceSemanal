@@ -178,9 +178,10 @@
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-auto-rows: 1fr;
+            grid-template-rows: 1fr 1fr;
             gap: 11px;
             flex: 1;
+            height: 0;
         }
 
         /* Cards with gradient border trick */
@@ -229,18 +230,19 @@
             position: relative;
             background: rgba(12, 12, 18, 0.95);
             border-radius: 10px;
-            padding: 14px 17px;
+            padding: 11px 15px;
             height: 100%;
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(2px);
+            overflow: hidden;
         }
 
         .card-header {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 9px;
         }
 
         .icon-box {
@@ -283,15 +285,15 @@
         .items {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
             justify-content: flex-start;
         }
 
         .item {
-            font-size: 13px;
+            font-size: 12.5px;
             color: #d4d4de;
-            line-height: 1.5;
+            line-height: 1.45;
             display: flex;
             gap: 8px;
             align-items: flex-start;
@@ -406,9 +408,8 @@
         }
 
         .bar-1 { flex: 1; background: #243A85; }
-        .bar-2 { flex: 1; background: #6ABF4B; }
-        .bar-3 { flex: 1; background: #C4297D; }
-        .bar-4 { flex: 1; background: #F5A623; }
+        .bar-2 { flex: 1; background: #C4297D; }
+        .bar-3 { flex: 1; background: #6ABF4B; }
     </style>
 </head>
 
@@ -534,7 +535,6 @@
             <div class="bar-1"></div>
             <div class="bar-2"></div>
             <div class="bar-3"></div>
-            <div class="bar-4"></div>
         </div>
     </div>
 
