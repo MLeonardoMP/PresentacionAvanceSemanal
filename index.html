@@ -8,6 +8,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&display=swap');
 
+        /* ── CSS Houdini: permite animar el ángulo del border beam ── */
+        @property --beam-angle {
+            syntax: '<angle>';
+            inherits: false;
+            initial-value: 0deg;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -23,6 +30,7 @@
             min-height: 100vh;
         }
 
+        /* ── SLIDE ── */
         .slide {
             width: 1000px;
             height: 580px;
@@ -34,63 +42,74 @@
             flex-direction: column;
         }
 
-        /* Noise texture overlay */
-        .slide::after {
+        /* ── DOT GRID BACKGROUND (Aceternity: Grid and Dot Backgrounds) ──
+           Sustituye el ruido anterior. Patrón de puntos en azul corporativo
+           muy sutil — da orden, simetría y modernidad sin distraer. */
+        .slide::before {
             content: '';
             position: absolute;
             inset: 0;
-            opacity: 0.025;
+            background-image: radial-gradient(circle, rgba(74, 108, 247, 0.13) 1px, transparent 1px);
+            background-size: 28px 28px;
             pointer-events: none;
             z-index: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size: 128px 128px;
         }
 
-        /* Ambient glows */
+        /* ── AMBIENT GLOWS (mejorados con breathing animation) ── */
         .glow-1 {
             position: absolute;
-            top: -100px;
+            top: -80px;
             left: 5%;
-            width: 400px;
-            height: 250px;
-            background: radial-gradient(ellipse, rgba(36, 58, 133, 0.2) 0%, transparent 65%);
+            width: 420px;
+            height: 280px;
+            background: radial-gradient(ellipse, rgba(36, 58, 133, 0.28) 0%, transparent 65%);
             pointer-events: none;
             z-index: 0;
+            animation: breathe 8s ease-in-out infinite;
         }
 
         .glow-2 {
             position: absolute;
-            top: -60px;
+            top: -50px;
             right: 5%;
-            width: 300px;
-            height: 200px;
-            background: radial-gradient(ellipse, rgba(196, 41, 125, 0.12) 0%, transparent 65%);
+            width: 320px;
+            height: 220px;
+            background: radial-gradient(ellipse, rgba(196, 41, 125, 0.18) 0%, transparent 65%);
             pointer-events: none;
             z-index: 0;
+            animation: breathe 10s ease-in-out infinite reverse;
         }
 
         .glow-3 {
             position: absolute;
-            bottom: -80px;
+            bottom: -70px;
             left: 5%;
-            width: 350px;
-            height: 220px;
-            background: radial-gradient(ellipse, rgba(106, 191, 75, 0.1) 0%, transparent 65%);
+            width: 360px;
+            height: 240px;
+            background: radial-gradient(ellipse, rgba(106, 191, 75, 0.14) 0%, transparent 65%);
             pointer-events: none;
             z-index: 0;
+            animation: breathe 12s ease-in-out infinite;
         }
 
         .glow-4 {
             position: absolute;
-            bottom: -60px;
+            bottom: -50px;
             right: 5%;
             width: 300px;
-            height: 200px;
-            background: radial-gradient(ellipse, rgba(245, 166, 35, 0.1) 0%, transparent 65%);
+            height: 210px;
+            background: radial-gradient(ellipse, rgba(245, 166, 35, 0.14) 0%, transparent 65%);
             pointer-events: none;
             z-index: 0;
+            animation: breathe 9s ease-in-out infinite reverse;
         }
 
+        @keyframes breathe {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50%       { opacity: 1;   transform: scale(1.08); }
+        }
+
+        /* ── CONTENT ── */
         .content {
             padding: 26px 34px 16px;
             flex: 1;
@@ -101,7 +120,7 @@
             z-index: 1;
         }
 
-        /* Header */
+        /* ── HEADER ── */
         .header {
             display: flex;
             justify-content: space-between;
@@ -114,12 +133,33 @@
             align-items: center;
         }
 
+        /* ── SHIMMER TITLE (Aceternity: Gradient Text / Shimmer)
+           Gradiente animado usando background-clip:text en colores corporativos. ── */
         .title {
             font-family: 'Space Grotesk', sans-serif;
             font-size: 24px;
             font-weight: 800;
-            color: #f0f0f2;
             letter-spacing: -0.5px;
+            background: linear-gradient(
+                90deg,
+                #c8d4ff 0%,
+                #4a6cf7 18%,
+                #e0e0f5 36%,
+                #C4297D 54%,
+                #e0e0f5 68%,
+                #6ABF4B 82%,
+                #c8d4ff 100%
+            );
+            background-size: 250% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer-title 6s linear infinite;
+        }
+
+        @keyframes shimmer-title {
+            0%   { background-position: 0%   center; }
+            100% { background-position: 250% center; }
         }
 
         .subtitle {
@@ -144,9 +184,7 @@
             backdrop-filter: blur(4px);
         }
 
-        .badge svg {
-            opacity: 0.8;
-        }
+        .badge svg { opacity: 0.8; }
 
         .header-logo {
             height: 32px;
@@ -156,7 +194,7 @@
             margin-right: 12px;
         }
 
-        /* Divider */
+        /* ── DIVIDER ── */
         .divider {
             height: 3px;
             margin-bottom: 12px;
@@ -174,7 +212,7 @@
             );
         }
 
-        /* Grid */
+        /* ── GRID ── */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -184,7 +222,7 @@
             height: 0;
         }
 
-        /* Cards with gradient border trick */
+        /* ── CARDS ── */
         .card {
             position: relative;
             border-radius: 11px;
@@ -199,33 +237,58 @@
         .card:nth-child(4) { animation-delay: 0.35s; }
 
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
+        /* ── BORDER BEAM (Aceternity: Moving Border)
+           Rayo de luz girando alrededor del borde al hacer hover.
+           Usa @property para animar el ángulo del conic-gradient. ── */
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 12px;
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            background: conic-gradient(
+                from var(--beam-angle),
+                transparent 0deg,
+                var(--beam-color) 45deg,
+                transparent 90deg
+            );
+            animation: beam-rotate 2.5s linear infinite;
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        @keyframes beam-rotate {
+            to { --beam-angle: 360deg; }
+        }
+
+        /* Color del beam por tarjeta */
+        .c-primary  { --beam-color: rgba(74, 108, 247, 0.9); }
+        .c-tertiary { --beam-color: rgba(106, 191, 75, 0.9); }
+        .c-info     { --beam-color: rgba(196, 41, 125, 0.9); }
+        .c-amber    { --beam-color: rgba(245, 166, 35, 0.9); }
+
         .card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
         }
 
         .card-border {
             position: absolute;
             inset: 0;
             border-radius: 11px;
-            opacity: 0.6;
-            transition: opacity 0.2s;
+            opacity: 0.55;
+            transition: opacity 0.3s;
+            z-index: 1;
         }
 
-        .card:hover .card-border {
-            opacity: 0.9;
-        }
+        .card:hover .card-border { opacity: 0.85; }
 
+        /* ── CARD INNER ── */
         .card-inner {
             position: relative;
             background: rgba(12, 12, 18, 0.95);
@@ -236,13 +299,31 @@
             flex-direction: column;
             backdrop-filter: blur(2px);
             overflow: hidden;
+            z-index: 2;
         }
 
+        /* ── SPOTLIGHT CARD (Aceternity: Card Spotlight)
+           Overlay de luz radial que sigue el cursor — aplicado por JS. ── */
+        .card-spotlight {
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .card-inner:hover .card-spotlight { opacity: 1; }
+
+        /* ── CARD HEADER ── */
         .card-header {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 9px;
+            position: relative;
+            z-index: 4;
         }
 
         .icon-box {
@@ -263,7 +344,6 @@
             z-index: 1;
         }
 
-        /* Icon glow */
         .icon-box::after {
             content: '';
             position: absolute;
@@ -281,13 +361,15 @@
             letter-spacing: -0.15px;
         }
 
-        /* Items */
+        /* ── ITEMS ── */
         .items {
             display: flex;
             flex-direction: column;
             gap: 6px;
             flex: 1;
             justify-content: flex-start;
+            position: relative;
+            z-index: 4;
         }
 
         .item {
@@ -308,96 +390,42 @@
             font-variant-numeric: tabular-nums;
         }
 
-        .item strong {
-            font-weight: 600;
-        }
+        .item strong { font-weight: 600; }
 
-        /* ---- Color themes ---- */
-        /* Primary - Blue */
+        /* ── COLOR THEMES ── */
         .c-primary .card-border {
             background: linear-gradient(135deg, rgba(74, 108, 247, 0.55), rgba(74, 108, 247, 0.05));
         }
+        .c-primary .icon-box       { background: rgba(36, 58, 133, 0.35); }
+        .c-primary .icon-box::after{ background: rgba(74, 108, 247, 0.35); }
+        .c-primary .num            { color: rgba(74, 108, 247, 0.9); }
+        .c-primary .item strong    { color: rgba(160, 180, 255, 1); }
 
-        .c-primary .icon-box {
-            background: rgba(36, 58, 133, 0.35);
-        }
-
-        .c-primary .icon-box::after {
-            background: rgba(74, 108, 247, 0.35);
-        }
-
-        .c-primary .num {
-            color: rgba(74, 108, 247, 0.9);
-        }
-
-        .c-primary .item strong {
-            color: rgba(160, 180, 255, 1);
-        }
-
-        /* Tertiary - Green */
         .c-tertiary .card-border {
             background: linear-gradient(135deg, rgba(106, 191, 75, 0.5), rgba(106, 191, 75, 0.05));
         }
+        .c-tertiary .icon-box       { background: rgba(106, 191, 75, 0.28); }
+        .c-tertiary .icon-box::after{ background: rgba(106, 191, 75, 0.3); }
+        .c-tertiary .num            { color: rgba(106, 191, 75, 0.9); }
+        .c-tertiary .item strong    { color: rgba(150, 220, 120, 1); }
 
-        .c-tertiary .icon-box {
-            background: rgba(106, 191, 75, 0.28);
-        }
-
-        .c-tertiary .icon-box::after {
-            background: rgba(106, 191, 75, 0.3);
-        }
-
-        .c-tertiary .num {
-            color: rgba(106, 191, 75, 0.9);
-        }
-
-        .c-tertiary .item strong {
-            color: rgba(150, 220, 120, 1);
-        }
-
-        /* Info - Magenta */
         .c-info .card-border {
             background: linear-gradient(135deg, rgba(196, 41, 125, 0.55), rgba(196, 41, 125, 0.05));
         }
+        .c-info .icon-box       { background: rgba(196, 41, 125, 0.28); }
+        .c-info .icon-box::after{ background: rgba(196, 41, 125, 0.35); }
+        .c-info .num            { color: rgba(220, 60, 150, 0.9); }
+        .c-info .item strong    { color: rgba(240, 140, 195, 1); }
 
-        .c-info .icon-box {
-            background: rgba(196, 41, 125, 0.28);
-        }
-
-        .c-info .icon-box::after {
-            background: rgba(196, 41, 125, 0.35);
-        }
-
-        .c-info .num {
-            color: rgba(220, 60, 150, 0.9);
-        }
-
-        .c-info .item strong {
-            color: rgba(240, 140, 195, 1);
-        }
-
-        /* Amber - Desarrollo */
         .c-amber .card-border {
             background: linear-gradient(135deg, rgba(245, 166, 35, 0.55), rgba(245, 166, 35, 0.05));
         }
+        .c-amber .icon-box       { background: rgba(245, 166, 35, 0.28); }
+        .c-amber .icon-box::after{ background: rgba(245, 166, 35, 0.35); }
+        .c-amber .num            { color: rgba(245, 166, 35, 0.92); }
+        .c-amber .item strong    { color: rgba(255, 200, 100, 1); }
 
-        .c-amber .icon-box {
-            background: rgba(245, 166, 35, 0.28);
-        }
-
-        .c-amber .icon-box::after {
-            background: rgba(245, 166, 35, 0.35);
-        }
-
-        .c-amber .num {
-            color: rgba(245, 166, 35, 0.92);
-        }
-
-        .c-amber .item strong {
-            color: rgba(255, 200, 100, 1);
-        }
-
-        /* Footer bar */
+        /* ── FOOTER ── */
         .footer-bar {
             height: 10px;
             width: 100%;
@@ -445,6 +473,7 @@
                 <div class="card c-primary">
                     <div class="card-border"></div>
                     <div class="card-inner">
+                        <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="#4a6cf7" stroke-width="2"
@@ -467,6 +496,7 @@
                 <div class="card c-tertiary">
                     <div class="card-border"></div>
                     <div class="card-inner">
+                        <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="#6ABF4B" stroke-width="2"
@@ -490,6 +520,7 @@
                 <div class="card c-info">
                     <div class="card-border"></div>
                     <div class="card-inner">
+                        <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="#C4297D" stroke-width="2"
@@ -513,6 +544,7 @@
                 <div class="card c-amber">
                     <div class="card-border"></div>
                     <div class="card-inner">
+                        <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2"
@@ -541,9 +573,37 @@
     </div>
 
     <script>
+        // ── Fecha dinámica ──
         const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         const hoy = new Date();
         document.getElementById('fecha-badge').textContent = `${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
+
+        // ── SPOTLIGHT CARD (Aceternity: Card Spotlight)
+        //    Sigue el cursor con un radial-gradient por card-inner ──
+        const spotlightColors = {
+            'c-primary':  'rgba(74, 108, 247, 0.08)',
+            'c-tertiary': 'rgba(106, 191, 75, 0.08)',
+            'c-info':     'rgba(196, 41, 125, 0.08)',
+            'c-amber':    'rgba(245, 166, 35, 0.08)',
+        };
+
+        document.querySelectorAll('.card').forEach(card => {
+            const colorKey = [...card.classList].find(c => c.startsWith('c-'));
+            const color = spotlightColors[colorKey] || 'rgba(255,255,255,0.06)';
+            const spotlight = card.querySelector('.card-spotlight');
+
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                spotlight.style.background =
+                    `radial-gradient(circle 130px at ${x}px ${y}px, ${color} 0%, transparent 70%)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                spotlight.style.background = 'none';
+            });
+        });
     </script>
 </body>
 
