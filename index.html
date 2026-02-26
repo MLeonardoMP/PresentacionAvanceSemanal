@@ -435,17 +435,23 @@
         .footer-bar {
             height: 10px;
             width: 100%;
-            display: flex;
             flex-shrink: 0;
             position: relative;
             z-index: 1;
             border-radius: 0 0 16px 16px;
             overflow: hidden;
+            background: linear-gradient(
+                90deg,
+                #4a6cf7, #C4297D, #6ABF4B, #4a6cf7
+            );
+            background-size: 300% 100%;
+            animation: footer-flow 12s linear infinite;
         }
 
-        .bar-1 { flex: 1; background: #243A85; }
-        .bar-2 { flex: 1; background: #C4297D; }
-        .bar-3 { flex: 1; background: #6ABF4B; }
+        @keyframes footer-flow {
+            0%   { background-position: 0%   50%; }
+            100% { background-position: 300% 50%; }
+        }
     </style>
 </head>
 
@@ -576,11 +582,7 @@
 
             </div>
         </div>
-        <div class="footer-bar">
-            <div class="bar-1"></div>
-            <div class="bar-2"></div>
-            <div class="bar-3"></div>
-        </div>
+        <div class="footer-bar"></div>
     </div>
 
     <script>
@@ -595,8 +597,8 @@
             canvas.height = H;
             const ctx = canvas.getContext('2d');
 
-            const CELL     = 20;   // tamaño de cada celda en px
-            const HOVER_R  = 140;  // radio del círculo de hover
+            const CELL     = 40;   // tamaño de cada celda en px
+            const HOVER_R  = 160;  // radio del círculo de hover
             const CORP = [
                 [74,  108, 247],   // azul
                 [196,  41, 125],   // magenta
