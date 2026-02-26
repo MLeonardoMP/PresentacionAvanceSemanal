@@ -289,7 +289,7 @@
         /* ── CARD INNER ── */
         .card-inner {
             position: relative;
-            background: rgba(12, 12, 18, 0.95);
+            background: rgba(12, 12, 18, 0.92);
             border-radius: 10px;
             padding: 11px 15px;
             height: 100%;
@@ -298,6 +298,17 @@
             backdrop-filter: blur(2px);
             overflow: hidden;
             z-index: 2;
+        }
+
+        /* ── DOTTED GLOW canvas por tarjeta ── */
+        .card-dots-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 10px;
         }
 
         /* ── SPOTLIGHT CARD (Aceternity: Card Spotlight)
@@ -471,7 +482,8 @@
                 <!-- Pruebas, documentación y soporte -->
                 <div class="card c-primary">
                     <div class="card-border"></div>
-                    <div class="card-inner">
+                    <div class="card-inner" data-glow-color="74,108,247">
+                        <canvas class="card-dots-canvas"></canvas>
                         <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
@@ -494,7 +506,8 @@
                 <!-- Infraestructura -->
                 <div class="card c-tertiary">
                     <div class="card-border"></div>
-                    <div class="card-inner">
+                    <div class="card-inner" data-glow-color="106,191,75">
+                        <canvas class="card-dots-canvas"></canvas>
                         <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
@@ -518,7 +531,8 @@
                 <!-- Base de datos -->
                 <div class="card c-info">
                     <div class="card-border"></div>
-                    <div class="card-inner">
+                    <div class="card-inner" data-glow-color="196,41,125">
+                        <canvas class="card-dots-canvas"></canvas>
                         <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
@@ -542,7 +556,8 @@
                 <!-- Desarrollo -->
                 <div class="card c-amber">
                     <div class="card-border"></div>
-                    <div class="card-inner">
+                    <div class="card-inner" data-glow-color="245,166,35">
+                        <canvas class="card-dots-canvas"></canvas>
                         <div class="card-spotlight"></div>
                         <div class="card-header">
                             <div class="icon-box">
@@ -650,6 +665,64 @@
         const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         const hoy = new Date();
         document.getElementById('fecha-badge').textContent = `${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
+
+        // ── DOTTED GLOW por tarjeta — mismo efecto canvas pero en color de cada área ──
+        document.querySelectorAll('.card-inner').forEach(inner => {
+            const canvas = inner.querySelector('.card-dots-canvas');
+            const gc     = (inner.dataset.glowColor || '74,108,247').split(',').map(Number);
+            const W      = inner.offsetWidth  || 460;
+            const H      = inner.offsetHeight || 220;
+            canvas.width  = W;
+            canvas.height = H;
+            const ctx = canvas.getContext('2d');
+
+            const GAP = 14, R = 1.1, GLOW_R = 7;
+            const dots = [];
+
+            for (let x = GAP / 2; x < W; x += GAP) {
+                for (let y = GAP / 2; y < H; y += GAP) {
+                    const dx   = (x - W / 2) / (W / 2);
+                    const dy   = (y - H / 2) / (H / 2);
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxOp = Math.max(0, 1 - dist * 1.1) * 0.7;
+                    if (maxOp < 0.04) continue;
+                    dots.push({
+                        x, y, maxOp,
+                        speed: 0.3 + Math.random() * 1.2,
+                        phase: Math.random() * Math.PI * 2,
+                    });
+                }
+            }
+
+            // Offset de fase para que cada tarjeta no parpadee en sincronía
+            const phaseOffset = Math.random() * Math.PI * 2;
+            let t = phaseOffset;
+
+            function drawCard() {
+                ctx.clearRect(0, 0, W, H);
+                t += 0.016;
+                for (const d of dots) {
+                    const osc   = (Math.sin(t * d.speed + d.phase) + 1) / 2;
+                    const alpha = d.maxOp * (0.1 + osc * 0.9);
+                    if (alpha < 0.02) continue;
+
+                    const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, GLOW_R);
+                    g.addColorStop(0, `rgba(${gc[0]},${gc[1]},${gc[2]},${alpha * 0.5})`);
+                    g.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, GLOW_R, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = `rgba(220,225,255,${alpha * 0.65})`;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, R, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                requestAnimationFrame(drawCard);
+            }
+            drawCard();
+        });
 
         // ── SPOTLIGHT CARD (Aceternity: Card Spotlight)
         //    Sigue el cursor con un radial-gradient por card-inner ──
