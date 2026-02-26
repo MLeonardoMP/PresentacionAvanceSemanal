@@ -131,6 +131,24 @@
             align-items: center;
         }
 
+        /* Gradiente animado sobre el logo blanco (multiply: blanco × color = color) */
+        .logo-wrap {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+        }
+        .logo-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, #4a6cf7, #C4297D, #6ABF4B, #4a6cf7);
+            background-size: 300% 100%;
+            animation: footer-flow 12s linear infinite;
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
         /* ── SHIMMER TITLE (Aceternity: Gradient Text / Shimmer)
            Gradiente animado usando background-clip:text en colores corporativos. ── */
         .title {
@@ -465,7 +483,9 @@
         <div class="content">
             <div class="header">
                 <div class="header-left">
-                    <img src="LOGO-CAC-BLANCO.png" alt="CAC" class="header-logo">
+                    <div class="logo-wrap">
+                        <img src="LOGO-CAC-BLANCO.png" alt="CAC" class="header-logo">
+                    </div>
                     <div>
                         <div class="title">Avances Coordinación de Tecnología</div>
                         <div class="subtitle">Avances semanales por sub área</div>
