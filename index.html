@@ -131,11 +131,15 @@
             align-items: center;
         }
 
-        /* Gradiente animado sobre el logo blanco (multiply: blanco × color = color) */
+        /* Gradiente animado sobre el logo: la máscara CSS recorta el gradiente
+           exactamente a la forma del logo (píxeles opacos del PNG). */
         .logo-wrap {
             position: relative;
             display: inline-flex;
             align-items: center;
+        }
+        .logo-wrap .header-logo {
+            visibility: hidden;   /* ocupa espacio pero invisible */
         }
         .logo-wrap::after {
             content: '';
@@ -144,9 +148,15 @@
             background: linear-gradient(90deg, #4a6cf7, #C4297D, #6ABF4B, #4a6cf7);
             background-size: 300% 100%;
             animation: footer-flow 12s linear infinite;
-            mix-blend-mode: multiply;
+            -webkit-mask-image: url(LOGO-CAC-BLANCO.png);
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            -webkit-mask-size: 100% 100%;
+            mask-image: url(LOGO-CAC-BLANCO.png);
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: 100% 100%;
             pointer-events: none;
-            border-radius: 4px;
         }
 
         /* ── SHIMMER TITLE (Aceternity: Gradient Text / Shimmer)
