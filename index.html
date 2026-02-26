@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%23243A85'/><text y='.9em' font-size='80' x='10'>📊</text></svg>">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@700;800&display=swap');
 
         * {
             margin: 0;
@@ -45,14 +46,14 @@
             background-size: 128px 128px;
         }
 
-        /* Ambient glow */
+        /* Ambient glows */
         .glow-1 {
             position: absolute;
             top: -100px;
-            left: 25%;
+            left: 5%;
             width: 400px;
             height: 250px;
-            background: radial-gradient(ellipse, rgba(36, 58, 133, 0.18) 0%, transparent 65%);
+            background: radial-gradient(ellipse, rgba(36, 58, 133, 0.2) 0%, transparent 65%);
             pointer-events: none;
             z-index: 0;
         }
@@ -60,16 +61,38 @@
         .glow-2 {
             position: absolute;
             top: -60px;
-            right: 15%;
+            right: 5%;
             width: 300px;
             height: 200px;
-            background: radial-gradient(ellipse, rgba(196, 41, 125, 0.1) 0%, transparent 65%);
+            background: radial-gradient(ellipse, rgba(196, 41, 125, 0.12) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-3 {
+            position: absolute;
+            bottom: -80px;
+            left: 5%;
+            width: 350px;
+            height: 220px;
+            background: radial-gradient(ellipse, rgba(106, 191, 75, 0.1) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-4 {
+            position: absolute;
+            bottom: -60px;
+            right: 5%;
+            width: 300px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(245, 166, 35, 0.1) 0%, transparent 65%);
             pointer-events: none;
             z-index: 0;
         }
 
         .content {
-            padding: 26px 34px 20px;
+            padding: 26px 34px 16px;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -83,10 +106,16 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
         }
 
         .title {
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 24px;
             font-weight: 800;
             color: #f0f0f2;
@@ -129,15 +158,27 @@
 
         /* Divider */
         .divider {
-            height: 2px;
-            margin-bottom: 14px;
-            background: linear-gradient(90deg, rgba(36, 58, 133, 0.25), rgba(196, 41, 125, 0.15), rgba(106, 191, 75, 0.1), transparent);
+            height: 3px;
+            margin-bottom: 12px;
+            border-radius: 2px;
+            background: linear-gradient(
+                90deg,
+                rgba(74, 108, 247, 0.5) 0%,
+                rgba(74, 108, 247, 0.3) 23%,
+                rgba(106, 191, 75, 0.3) 25%,
+                rgba(106, 191, 75, 0.2) 48%,
+                rgba(196, 41, 125, 0.3) 50%,
+                rgba(196, 41, 125, 0.2) 73%,
+                rgba(245, 166, 35, 0.3) 75%,
+                rgba(245, 166, 35, 0.1) 100%
+            );
         }
 
         /* Grid */
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-auto-rows: 1fr;
             gap: 11px;
             flex: 1;
         }
@@ -148,7 +189,23 @@
             border-radius: 11px;
             padding: 1px;
             overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.15s; }
+        .card:nth-child(3) { animation-delay: 0.25s; }
+        .card:nth-child(4) { animation-delay: 0.35s; }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .card:hover {
@@ -172,7 +229,7 @@
             position: relative;
             background: rgba(12, 12, 18, 0.95);
             border-radius: 10px;
-            padding: 13px 17px;
+            padding: 14px 17px;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -183,7 +240,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 11px;
+            margin-bottom: 12px;
         }
 
         .icon-box {
@@ -226,7 +283,9 @@
         .items {
             display: flex;
             flex-direction: column;
-            gap: 7px;
+            gap: 8px;
+            flex: 1;
+            justify-content: flex-start;
         }
 
         .item {
@@ -251,15 +310,6 @@
             font-weight: 600;
         }
 
-        .item.empty {
-            opacity: 0.25;
-        }
-
-        .item.empty span:last-child {
-            letter-spacing: 2px;
-            font-style: italic;
-        }
-
         /* ---- Color themes ---- */
         /* Primary - Blue */
         .c-primary .card-border {
@@ -282,27 +332,6 @@
             color: rgba(160, 180, 255, 1);
         }
 
-        /* Info - Magenta */
-        .c-info .card-border {
-            background: linear-gradient(135deg, rgba(196, 41, 125, 0.55), rgba(196, 41, 125, 0.05));
-        }
-
-        .c-info .icon-box {
-            background: rgba(196, 41, 125, 0.28);
-        }
-
-        .c-info .icon-box::after {
-            background: rgba(196, 41, 125, 0.35);
-        }
-
-        .c-info .num {
-            color: rgba(220, 60, 150, 0.9);
-        }
-
-        .c-info .item strong {
-            color: rgba(240, 140, 195, 1);
-        }
-
         /* Tertiary - Green */
         .c-tertiary .card-border {
             background: linear-gradient(135deg, rgba(106, 191, 75, 0.5), rgba(106, 191, 75, 0.05));
@@ -322,6 +351,27 @@
 
         .c-tertiary .item strong {
             color: rgba(150, 220, 120, 1);
+        }
+
+        /* Info - Magenta */
+        .c-info .card-border {
+            background: linear-gradient(135deg, rgba(196, 41, 125, 0.55), rgba(196, 41, 125, 0.05));
+        }
+
+        .c-info .icon-box {
+            background: rgba(196, 41, 125, 0.28);
+        }
+
+        .c-info .icon-box::after {
+            background: rgba(196, 41, 125, 0.35);
+        }
+
+        .c-info .num {
+            color: rgba(220, 60, 150, 0.9);
+        }
+
+        .c-info .item strong {
+            color: rgba(240, 140, 195, 1);
         }
 
         /* Amber - Desarrollo */
@@ -347,7 +397,7 @@
 
         /* Footer bar */
         .footer-bar {
-            height: 6px;
+            height: 10px;
             width: 100%;
             display: flex;
             flex-shrink: 0;
@@ -355,20 +405,10 @@
             z-index: 1;
         }
 
-        .bar-1 {
-            flex: 1;
-            background: #243A85;
-        }
-
-        .bar-2 {
-            flex: 1;
-            background: #C4297D;
-        }
-
-        .bar-3 {
-            flex: 1;
-            background: #6ABF4B;
-        }
+        .bar-1 { flex: 1; background: #243A85; }
+        .bar-2 { flex: 1; background: #6ABF4B; }
+        .bar-3 { flex: 1; background: #C4297D; }
+        .bar-4 { flex: 1; background: #F5A623; }
     </style>
 </head>
 
@@ -376,9 +416,11 @@
     <div class="slide">
         <div class="glow-1"></div>
         <div class="glow-2"></div>
+        <div class="glow-3"></div>
+        <div class="glow-4"></div>
         <div class="content">
             <div class="header">
-                <div style="display:flex;align-items:center;">
+                <div class="header-left">
                     <img src="LOGO-CAC-BLANCO.png" alt="CAC" class="header-logo">
                     <div>
                         <div class="title">Avances Coordinación de Tecnología</div>
@@ -390,7 +432,7 @@
                         <rect x="3" y="4" width="18" height="18" rx="2" />
                         <path d="M16 2v4M8 2v4M3 10h18" />
                     </svg>
-                    25 de Febrero
+                    <span id="fecha-badge"></span>
                 </div>
             </div>
             <div class="divider"></div>
@@ -411,11 +453,8 @@
                             <div class="card-title">Pruebas, Documentación y Soporte</div>
                         </div>
                         <div class="items">
-                            <div class="item"><span class="num">1.</span><span>Levantamiento y elaboración de historias
-                                    de usuario de proyectos del Q1 para tecnología e innovación en la plataforma
-                                    DevOps.</span></div>
-                            <div class="item"><span class="num">2.</span><span>Capacitación dirigida a 4 IPS para
-                                    fortalecer el conocimiento y manejo del Reporte de Atenciones en Salud.</span></div>
+                            <div class="item"><span class="num">1.</span><span>Levantamiento y elaboración de historias de usuario de proyectos del Q1 para tecnología e innovación en la plataforma DevOps.</span></div>
+                            <div class="item"><span class="num">2.</span><span>Capacitación dirigida a 4 IPS para fortalecer el conocimiento y manejo del Reporte de Atenciones en Salud.</span></div>
                             <div class="item"><span class="num">3.</span><span>Pruebas funcionales al motor de reglas (máximos, mínimos y comodines) y parametrización del reporte para la cobertura de hepatitis.</span></div>
                         </div>
                     </div>
@@ -460,12 +499,9 @@
                             <div class="card-title">Base de Datos</div>
                         </div>
                         <div class="items">
-                            <div class="item"><span class="num">1.</span><span>Parametrización cohorte Salud Mental en
-                                    ambiente de pruebas de SISCAC.</span></div>
-                            <div class="item"><span class="num">2.</span><span>Generación de la Base de Datos de
-                                    Requeridos de Hemofilia y publicación a entidades.</span></div>
-                            <div class="item"><span class="num">3.</span><span>Entrega de base de datos antes de
-                                    auditoría de Esclerosis Múltiple.</span></div>
+                            <div class="item"><span class="num">1.</span><span>Parametrización cohorte Salud Mental en ambiente de pruebas de SISCAC.</span></div>
+                            <div class="item"><span class="num">2.</span><span>Generación de la Base de Datos de Requeridos de Hemofilia y publicación a entidades.</span></div>
+                            <div class="item"><span class="num">3.</span><span>Entrega de base de datos antes de auditoría de Esclerosis Múltiple.</span></div>
                         </div>
                     </div>
                 </div>
@@ -485,13 +521,9 @@
                             <div class="card-title">Desarrollo</div>
                         </div>
                         <div class="items">
-                            <div class="item"><span class="num">1.</span><span>Corrección de bugs en la ejecución de
-                                    reglas teniendo en cuenta rangos y mínimos en valores para el proceso de
-                                    cargue.</span></div>
-                            <div class="item"><span class="num">2.</span><span>Comenzamos la integración de Claude Code
-                                    en nuestros flujos de trabajo.</span></div>
-                            <div class="item"><span class="num">3.</span><span>Comienzo del proceso de optimización y
-                                    modernización de aplicaciones y SPs.</span></div>
+                            <div class="item"><span class="num">1.</span><span>Corrección de bugs en la ejecución de reglas teniendo en cuenta rangos y mínimos en valores para el proceso de cargue.</span></div>
+                            <div class="item"><span class="num">2.</span><span>Comenzamos la integración de Claude Code en nuestros flujos de trabajo.</span></div>
+                            <div class="item"><span class="num">3.</span><span>Comienzo del proceso de optimización y modernización de aplicaciones y SPs.</span></div>
                         </div>
                     </div>
                 </div>
@@ -502,8 +534,15 @@
             <div class="bar-1"></div>
             <div class="bar-2"></div>
             <div class="bar-3"></div>
+            <div class="bar-4"></div>
         </div>
     </div>
+
+    <script>
+        const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const hoy = new Date();
+        document.getElementById('fecha-badge').textContent = `${hoy.getDate()} de ${meses[hoy.getMonth()]}`;
+    </script>
 </body>
 
 </html>
