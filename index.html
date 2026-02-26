@@ -42,17 +42,15 @@
             flex-direction: column;
         }
 
-        /* ── DOT GRID BACKGROUND (Aceternity: Grid and Dot Backgrounds) ──
-           Sustituye el ruido anterior. Patrón de puntos en azul corporativo
-           muy sutil — da orden, simetría y modernidad sin distraer. */
-        .slide::before {
-            content: '';
+        /* ── DOTTED GLOW BACKGROUND canvas — se inyecta via JS ── */
+        #dotted-glow-canvas {
             position: absolute;
             inset: 0;
-            background-image: radial-gradient(circle, rgba(74, 108, 247, 0.13) 1px, transparent 1px);
-            background-size: 28px 28px;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 0;
+            border-radius: 16px;
         }
 
         /* ── AMBIENT GLOWS (mejorados con breathing animation) ── */
@@ -445,6 +443,7 @@
 
 <body>
     <div class="slide">
+        <canvas id="dotted-glow-canvas"></canvas>
         <div class="glow-1"></div>
         <div class="glow-2"></div>
         <div class="glow-3"></div>
@@ -573,6 +572,80 @@
     </div>
 
     <script>
+        // ── DOTTED GLOW BACKGROUND (Aceternity UI — vanilla Canvas)
+        //    Puntos que parpadean aleatoriamente con glow radial.
+        //    Máscara radial: más brillante al centro, se desvanece hacia los bordes. ──
+        (function () {
+            const canvas = document.getElementById('dotted-glow-canvas');
+            const slide  = canvas.parentElement;
+            const W = slide.offsetWidth  || 1000;
+            const H = slide.offsetHeight || 580;
+            canvas.width  = W;
+            canvas.height = H;
+            const ctx = canvas.getContext('2d');
+
+            const GAP    = 22;   // distancia entre puntos
+            const R      = 1.4; // radio del punto
+            const GLOW_R = 9;   // radio del halo
+
+            // Colores del glow: mezcla de los corporativos
+            const GLOW_COLORS = [
+                [74,  108, 247],   // azul
+                [196,  41, 125],   // magenta
+                [106, 191,  75],   // verde
+            ];
+
+            const dots = [];
+            for (let x = GAP / 2; x < W; x += GAP) {
+                for (let y = GAP / 2; y < H; y += GAP) {
+                    // Distancia normalizada al centro (0 = centro, 1 = esquina)
+                    const dx   = (x - W / 2) / (W / 2);
+                    const dy   = (y - H / 2) / (H / 2);
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    // Los puntos del centro tienen maxOpacity más alto
+                    const maxOp = Math.max(0, 1 - dist * 1.05) * 0.85;
+                    if (maxOp < 0.05) continue;
+
+                    const gc = GLOW_COLORS[Math.floor(Math.random() * GLOW_COLORS.length)];
+                    dots.push({
+                        x, y, maxOp,
+                        speed : 0.4  + Math.random() * 1.4,
+                        phase : Math.random() * Math.PI * 2,
+                        gc,
+                    });
+                }
+            }
+
+            let t = 0;
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                t += 0.016;
+
+                for (const d of dots) {
+                    const osc   = (Math.sin(t * d.speed + d.phase) + 1) / 2;
+                    const alpha = d.maxOp * (0.15 + osc * 0.85);
+                    if (alpha < 0.02) continue;
+
+                    // Halo difuminado (glow)
+                    const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, GLOW_R);
+                    g.addColorStop(0, `rgba(${d.gc[0]},${d.gc[1]},${d.gc[2]},${alpha * 0.45})`);
+                    g.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, GLOW_R, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Punto central
+                    ctx.fillStyle = `rgba(200, 210, 255, ${alpha * 0.7})`;
+                    ctx.beginPath();
+                    ctx.arc(d.x, d.y, R, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
         // ── Fecha dinámica ──
         const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         const hoy = new Date();
